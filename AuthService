@@ -1,0 +1,20 @@
+public class AuthService {
+    private User user;
+    private String generatedOTP;
+
+    public AuthService(User user) {
+        this.user = user;
+    }
+
+    public boolean login(String username, String password) {
+        return user.checkCredentials(username, password);
+    }
+
+    public void sendOTP(String email) {
+        generatedOTP = OTPManager.generateOTP();
+        EmailService.sendOTPEmail(email, generatedOTP);
+    }
+
+    public boolean verifyOTP(String inputOTP) {
+        return generatedOTP.equals(inputOTP);
+    }
