@@ -1,0 +1,39 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        User user = new User("admin", "1234");
+        AuthService authService = new AuthService(user);
+
+        System.out.println("---- 2FA Java Demo ----");
+
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        if (authService.login(username, password)) {
+            System.out.print("Enter your email (to get OTP): ");
+            String email = scanner.nextLine();
+
+            System.out.println("Sending OTP to " + email + "...");
+            authService.sendOTP(email);
+
+            System.out.print("Enter received OTP: ");
+            String inputOTP = scanner.nextLine();
+
+            if (authService.verifyOTP(inputOTP)) {
+                System.out.println(" Access Granted. Welcome!");
+            } else {
+                System.out.println(" Incorrect OTP. Access Denied.");
+            }
+        } else {
+            System.out.println(" Login Failed. Try again.");
+        }
+
+        scanner.close();
+    }
+}
