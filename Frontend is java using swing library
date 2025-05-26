@@ -1,0 +1,73 @@
+import javax.swing.*;
+import java.awt.event.*;
+
+public class LoginGUI {
+    private static OTPManager otpManager = new OTPManager();
+    private static String generatedOtp = "";
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Two Factor Auth");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
+
+        JLabel userLabel = new JLabel("Username:");
+        userLabel.setBounds(50, 20, 100, 25);
+        JTextField userField = new JTextField();
+        userField.setBounds(150, 20, 180, 25);
+
+        JLabel passLabel = new JLabel("Password:");
+        passLabel.setBounds(50, 60, 100, 25);
+        JPasswordField passField = new JPasswordField();
+        passField.setBounds(150, 60, 180, 25);
+
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setBounds(50, 100, 100, 25);
+        JTextField emailField = new JTextField();
+        emailField.setBounds(150, 100, 180, 25);
+
+        JButton sendOtpBtn = new JButton("Send OTP");
+        sendOtpBtn.setBounds(150, 140, 100, 25);
+
+        JLabel otpLabel = new JLabel("Enter OTP:");
+        otpLabel.setBounds(50, 180, 100, 25);
+        JTextField otpField = new JTextField();
+        otpField.setBounds(150, 180, 180, 25);
+
+        JButton verifyBtn = new JButton("Verify");
+        verifyBtn.setBounds(150, 215, 100, 25);
+
+        JLabel resultLabel = new JLabel();
+        resultLabel.setBounds(50, 250, 300, 25);
+
+        frame.add(userLabel);
+        frame.add(userField);
+        frame.add(passLabel);
+        frame.add(passField);
+        frame.add(emailLabel);
+        frame.add(emailField);
+        frame.add(sendOtpBtn);
+        frame.add(otpLabel);
+        frame.add(otpField);
+        frame.add(verifyBtn);
+        frame.add(resultLabel);
+
+        sendOtpBtn.addActionListener(e -> {
+            String email = emailField.getText();
+            generatedOtp = otpManager.generateOTP();
+            EmailService.sendOTPEmail(email, generatedOtp);
+            resultLabel.setText("OTP sent to email.");
+        });
+
+        verifyBtn.addActionListener(_ -> {
+            String enteredOtp = otpField.getText();
+            if (enteredOtp.equals(generatedOtp)) {
+                resultLabel.setText("✅ Login successful!");
+            } else {
+                resultLabel.setText("❌ Incorrect OTP.");
+            }
+        });
+
+        frame.setVisible(true);
+    }
+}
